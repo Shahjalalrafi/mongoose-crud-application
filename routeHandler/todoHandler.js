@@ -2,12 +2,13 @@ const express = require('express')
 const mongoose = require('mongoose')
 const router = express.Router()
 const todoScema = require('../scemas/todoScema')
-const checkLoginHandler = require('../middleWare/checkLogin') 
+const checkLogin = require('../middleWare/checkLogin')
+
 
 const Todo = new mongoose.model('Todo', todoScema)
 
-router.get('/', checkLoginHandler, (req, res) => {
-    Todo.find({status: "inactive"})
+router.get('/', checkLogin, (req, res) => {
+    Todo.find({})
     .select({
         _id: 0,
         date: 0,
@@ -29,6 +30,8 @@ router.get('/', checkLoginHandler, (req, res) => {
 })
 
 router.get('/inactive', async (req, res) => {
+    console.log(req.userName)
+    console.log(req.userId)
    const todo = new Todo()
    const data = await todo.findActive().select({
        _id: 0
@@ -73,20 +76,22 @@ router.get('/:id', (req, res) => {
     })
 })
 
-// post single todo
-router.post('/', (req, res) => {
-    const newTodo = new Todo(req.body)
-    newTodo.save((err) => {
-        if(err){
-            res.status(500).json({
-                error: 'there was a server side error'
-            })
-        }else {
-            res.status(200).json({
-                message: 'data inserted succesfully'
-            })
-        }
+// post A todo
+router.post('/', async(req, res) => {
+    const newTodo = new Todo({
+        ...req.body,
+        user: req.userId
     })
+    try{
+        await newTodo.save()
+        res.status(200).json({
+            message: 'data inserted succesfully'
+        })
+    }catch {
+        res.status(500).json({
+            error: 'there was a server side error'
+        })
+    }
 })
 
 // post multiple todo

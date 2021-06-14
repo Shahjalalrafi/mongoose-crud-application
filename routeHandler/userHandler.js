@@ -26,42 +26,6 @@ router.post('/singUp', async (req, res) => {
     }
 })
 
-// // Login
-// router.post('/login', async (req, res) => {
-//     try {
-//         const user = await User.find({userName: req.body.userName})
-//         if(user && user.length > 0) {
-//             const isPassWordValid = await bcrypt.compare(req.body.password, user[0].password)
-//             if(isPassWordValid){
-//                 // generate token
-//                 const token = jwt.Sign({
-//                     userName: user[0].userName,
-//                     userId: user[0]._id
-//                 }, process.env.JWT_SECRET, { expiresIn: '1h' })
-                
-//                 res.status(200).json({
-//                     access_token: token,
-//                     message: "Login success"
-//                 })
-//             }else {
-//                 res.status(404).json({
-//                     error: 'authentication failed!'
-//                 })
-//             }
-
-//         }else {
-//             res.status(401).json({
-//                 error: 'authentication failed!'
-//             })
-//         }
-//     }catch{
-//         res.status(401).json({
-//             error: 'authentication failed!'
-//         })
-//     }
-// })
-
-
 // LOGIN
 router.post("/login", async(req, res) => {
     try {
