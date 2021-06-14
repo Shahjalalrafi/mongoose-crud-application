@@ -2,10 +2,11 @@ const express = require('express')
 const mongoose = require('mongoose')
 const router = express.Router()
 const todoScema = require('../scemas/todoScema')
+const checkLoginHandler = require('../middleWare/checkLogin') 
 
 const Todo = new mongoose.model('Todo', todoScema)
 
-router.get('/', (req, res) => {
+router.get('/', checkLoginHandler, (req, res) => {
     Todo.find({status: "inactive"})
     .select({
         _id: 0,
